@@ -1,0 +1,1 @@
+[{"title":"Hamburguesa","price":650,"thumbnail":"","id":1},{"title":"Papas","price":300,"thumbnail":"","id":2},{"title":"Gaseosa","price":300,"thumbnail":"","id":3},{"title":"Helado","price":400,"thumbnail":"","id":4}]
