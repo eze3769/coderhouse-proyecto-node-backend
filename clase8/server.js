@@ -1,5 +1,4 @@
 const express = require("express")
-const { rmSync } = require("fs")
 const app = express()
 const PORT = 8080
 
