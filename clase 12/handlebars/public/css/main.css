@@ -1,0 +1,26 @@
+.miniCard{
+    width: 10vw;
+   
+}
+.miniCard img{
+    width: 100%;       
+}
+.listContainer{
+    overflow-y: auto;
+}
+#chatMessages{
+    display: flex;
+    width: 50%;
+
+}
+.chatInput{
+    display: flex;
+    width: 40%;
+
+}
+.chatContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-bottom: 40px;
+}
