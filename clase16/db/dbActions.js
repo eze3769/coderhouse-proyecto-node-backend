@@ -38,4 +38,4 @@ export const select = (instance, table, fields) => {
 export const insert = (instance, table, data) => {
     return instance(table).insert(data)
 }
-
+// hola
