@@ -1,0 +1,329 @@
+test> use ecommerce
+switched to db ecommerce
+ecommerce> db.message.insert([{email: "eze@gmail.com", message:"que hora es?"}, {name:"admin@mail.com", message:"mira en tu reloj"},{email: "eze@gmail.com", mmessage:"gracias"}, {name:"usuario@mail.com", message:"buenas noches"}
+... ,{email: "eze@gmail.com", message:"me pasas el precio?"}, {name:"usuario@mail.com", message:"5000 pesos"}
+... ,{email: "eze@gmail.com", message:"gracias"}, {name:"usuario@mail.com", mesmessage:"tenga buen dia"}
+... ,{email: "eze@gmail.com", message:"fin del comunicado"}, {name:"usuario@mail.com", message:"adios"}])
+DeprecationWarning: Collection.insert() is deprecated. Use insertOne, insertMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId("6212eb6f8480290dddd58d1a"),
+    '1': ObjectId("6212eb6f8480290dddd58d1b"),
+    '2': ObjectId("6212eb6f8480290dddd58d1c"),
+    '3': ObjectId("6212eb6f8480290dddd58d1d"),
+    '4': ObjectId("6212eb6f8480290dddd58d1e"),
+    '5': ObjectId("6212eb6f8480290dddd58d1f"),
+    '6': ObjectId("6212eb6f8480290dddd58d20"),
+    '7': ObjectId("6212eb6f8480290dddd58d21"),
+    '8': ObjectId("6212eb6f8480290dddd58d22"),
+    '9': ObjectId("6212eb6f8480290dddd58d23")
+  }
+}
+ecommerce> db.products.insertMany([{"title":"calculadora","price":700,"thumbnail":"https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-128.png","id":1},{"title":"calculadora","price":700,"thumbnail":"https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-128.png","id":2},{"title":"reloj","price":1200,"thumbnail":"https://cdn3.iconfinder.com/data/icons/education-209/64/clock-stopwatch-timer-time-128.png","id":3},{"title":"lapiz","price":120,"thumbnail":"https://cdn3.iconfinder.com/data/icons/education-209/64/pencil-pen-stationery-school-128.png","id":4},{"title":"lapiz","price":120,"thumbnail":"https://cdn3.iconfinder.com/data/icons/education-209/64/pencil-pen-stationery-school-128.png","id":5},{"title":"tubo ensayos","price":250,"thumbnail":"https://cdn3.iconfinder.com/data/icons/education-209/64/tube-lab-science-school-128.png","id":6},{"title":"planilla","price":1500,"thumbnail":"https://cdn3.iconfinder.com/data/icons/education-209/64/paper-clip-academic-note-exam-128.png","id":7},{"title":"bus","price":200000,"thumbnail":"https://cdn3.iconfinder.com/data/icons/education-209/64/bus-vehicle-transport-school-128.png","id":8}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId("6212ed328480290dddd58d24"),
+    '1': ObjectId("6212ed328480290dddd58d25"),
+    '2': ObjectId("6212ed328480290dddd58d26"),
+    '3': ObjectId("6212ed328480290dddd58d27"),
+    '4': ObjectId("6212ed328480290dddd58d28"),
+    '5': ObjectId("6212ed328480290dddd58d29"),
+    '6': ObjectId("6212ed328480290dddd58d2a"),
+    '7': ObjectId("6212ed328480290dddd58d2b")
+  }
+}
+
+ecommerce> db.products.find({price:{$gt:100,$lt:5000}})
+[
+  {
+    _id: ObjectId("6212ed328480290dddd58d24"),
+    title: 'calculadora',
+    price: 700,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-128.png',
+    id: 1
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d25"),
+    title: 'calculadora',
+    price: 700,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-128.png',
+    id: 2
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d26"),
+    title: 'reloj',
+    price: 1200,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/clock-stopwatch-timer-time-128.png',
+    id: 3
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d27"),
+    title: 'lapiz',
+    price: 120,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/pencil-pen-stationery-school-128.png',
+    id: 4
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d28"),
+    title: 'lapiz',
+    price: 120,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/pencil-pen-stationery-school-128.png',
+    id: 5
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d29"),
+    title: 'tubo ensayos',
+    price: 250,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/tube-lab-science-school-128.png',
+    id: 6
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d2a"),
+    title: 'planilla',
+    price: 1500,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/paper-clip-academic-note-exam-128.png',
+    id: 7
+  }
+]
+
+ecommerce> db.products.find()
+[
+  {
+    _id: ObjectId("6212ed328480290dddd58d24"),
+    title: 'calculadora',
+    price: 700,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-128.png',
+    id: 1
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d25"),
+    title: 'calculadora',
+    price: 700,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-128.png',
+    id: 2
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d26"),
+    title: 'reloj',
+    price: 1200,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/clock-stopwatch-timer-time-128.png',
+    id: 3
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d27"),
+    title: 'lapiz',
+    price: 120,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/pencil-pen-stationery-school-128.png',
+    id: 4
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d28"),
+    title: 'lapiz',
+    price: 120,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/pencil-pen-stationery-school-128.png',
+    id: 5
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d29"),
+    title: 'tubo ensayos',
+    price: 250,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/tube-lab-science-school-128.png',
+    id: 6
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d2a"),
+    title: 'planilla',
+    price: 1500,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/paper-clip-academic-note-exam-128.png',
+    id: 7
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d2b"),
+    title: 'bus',
+    price: 200000,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/bus-vehicle-transport-school-128.png',
+    id: 8
+  }
+]
+
+ecommerce> db.message.find()
+[
+  {
+    _id: ObjectId("6212eb6f8480290dddd58d1a"),
+    email: 'eze@gmail.com',
+    message: 'que hora es?'
+  },
+  {
+    _id: ObjectId("6212eb6f8480290dddd58d1b"),
+    name: 'admin@mail.com',
+    message: 'mira en tu reloj'
+  },
+  {
+    _id: ObjectId("6212eb6f8480290dddd58d1c"),
+    email: 'eze@gmail.com',
+    message: 'gracias'
+  },
+  {
+    _id: ObjectId("6212eb6f8480290dddd58d1d"),
+    name: 'usuario@mail.com',
+    message: 'buenas noches'
+  },
+  {
+    _id: ObjectId("6212eb6f8480290dddd58d1e"),
+    email: 'eze@gmail.com',
+    message: 'me pasas el precio?'
+  },
+  {
+    _id: ObjectId("6212eb6f8480290dddd58d1f"),
+    name: 'usuario@mail.com',
+    message: '5000 pesos'
+  },
+  {
+    _id: ObjectId("6212eb6f8480290dddd58d20"),
+    email: 'eze@gmail.com',
+    message: 'gracias'
+  },
+  {
+    _id: ObjectId("6212eb6f8480290dddd58d21"),
+    name: 'usuario@mail.com',
+    message: 'tenga buen dia'
+  },
+  {
+    _id: ObjectId("6212eb6f8480290dddd58d22"),
+    email: 'eze@gmail.com',
+    message: 'fin del comunicado'
+  },
+  {
+    _id: ObjectId("6212eb6f8480290dddd58d23"),
+    name: 'usuario@mail.com',
+    message: 'adios'
+  }
+]
+
+ecommerce> db.products.countDocuments()
+8
+ecommerce> db.message.countDocuments()
+10
+
+ecommerce> db.products.insertOne({title:"apple", price: 50, thumbnail:"https://cdn3.iconfinder.com/data/icons/education-209/64/apple-fruit-science-school-512.png"})
+{
+  acknowledged: true,
+  insertedId: ObjectId("6212f6b803a9632cbfd6c26a")
+}
+ecommerce> db.products.find({price:{$lt: 1000}})
+[
+  {
+    _id: ObjectId("6212ed328480290dddd58d24"),
+    title: 'calculadora',
+    price: 700,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-128.png',
+    id: 1
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d25"),
+    title: 'calculadora',
+    price: 700,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-128.png',
+    id: 2
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d27"),
+    title: 'lapiz',
+    price: 120,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/pencil-pen-stationery-school-128.png',
+    id: 4
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d28"),
+    title: 'lapiz',
+    price: 120,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/pencil-pen-stationery-school-128.png',
+    id: 5
+  },
+  {
+    _id: ObjectId("6212ed328480290dddd58d29"),
+    title: 'tubo ensayos',
+    price: 250,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/tube-lab-science-school-128.png',
+    id: 6
+  },
+  {
+    _id: ObjectId("6212f6b803a9632cbfd6c26a"),
+    title: 'apple',
+    price: 50,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/apple-fruit-science-school-512.png'
+  }
+]
+ecommerce> db.products.find({price:{$lte: 1000, $gte:3000}})
+
+ecommerce> db.products.find({price:{$gte:3000}})
+[
+  {
+    _id: ObjectId("6212ed328480290dddd58d2b"),
+    title: 'bus',
+    price: 200000,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/bus-vehicle-transport-school-128.png',
+    id: 8
+  }
+]
+ecommerce> db.products.find().sort({"price": 1}).skip(2).limit(1)
+[
+  {
+    _id: ObjectId("6212ed328480290dddd58d28"),
+    title: 'lapiz',
+    price: 120,
+    thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-209/64/pencil-pen-stationery-school-128.png',
+    id: 5
+  }
+]
+ecommerce> db.products.updateMany({},{$set:{stock:100}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 9,
+  modifiedCount: 9,
+  upsertedCount: 0
+}
+ecommerce> db.products.updateMany({price:{$gt:4000}},{$set:{stock:0}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+ecommerce> db.products.deleteMany({price: {$lt:1000}})
+{ acknowledged: true, deletedCount: 6 }
+ecommerce> db.createUser({user: "pepe", pwd: "asd456", roles: [{role: "read", db: "ecommerce"}]})
+{ ok: 1 }
+ecommerce> quit
+ezequiel@ezequiel-Aspire-A515-51:~$ mongosh -u pepe ecommerce
+Enter password: ******
+Current Mongosh Log ID:	6212fce8e088cd2a9271965c
+Connecting to:		mongodb://127.0.0.1:27017/ecommerce?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.1.9
+Using MongoDB:		5.0.6
+Using Mongosh:		1.1.9
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting:
+   2022-02-20T11:26:05.290-03:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+   2022-02-20T11:26:06.417-03:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+ecommerce> db.products.updateMany({},{stock:0})
+MongoInvalidArgumentError: Update document requires atomic operators
+ecommerce> db.products.updateMany({},{$set:{stock:0}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 3,
+  modifiedCount: 2,
+  upsertedCount: 0
+}
+
+
+
