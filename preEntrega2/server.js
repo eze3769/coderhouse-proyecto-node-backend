@@ -5,7 +5,8 @@ import { Server } from "socket.io";
 import mongoose from "mongoose";
 import { check_products_table, insert, select, select_by_id } from './db/dbActions.js';
 import { knexSql, knexSqlite } from './db/dbConfig.js';
-import products from './models/products.js';
+import Products from './models/Products.js';
+import Messages from './models/Messages.js';
 const uri = "mongodb+srv://ezequielcoder:admin123@coderdb.mw5hj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 const app = express()
@@ -55,7 +56,7 @@ app.get('/',(req,res)=>{
 })
 app.get('/productos',async(req,res)=>{
     let empty
-    const response = await products.find({});
+    const response = await Products.find({});
 
     try {
         response == [] ? empty = true : empty = false
@@ -71,7 +72,7 @@ app.get('/productos',async(req,res)=>{
 })
 
 productsResources.post('/',async(req,res)=>{
-    const product = new products(req.body);
+    const product = new Products(req.body);
     try {
         await product.save();
         res.redirect("/productos");
@@ -93,28 +94,29 @@ app.use(express.static('./public'))
 io.on("connection", (socket)=>{
     console.log("user connected. ID:",socket.id)
     socket.emit("message", "connected to websocket")
-    select(knexSql, "products", "*")
-    .then(response =>{
-        socket.emit("products", response)
-    })
-    select(knexSqlite, "messages", "*")
-    .then(response => {
-        socket.emit("chat", response)
-    })
-
+    const products = await Products.find({});
+    try {
+        socket.emit("products", products)
+    } catch (error) {
+        res.status(500).send(error);
+    }
+    const messages = await Messages.find({})
+    try {
+        socket.emit("chat", messages)
+    } catch (error) {
+        res.status(500).send(error);
+    }
+  
     socket.on("sendMessage", data =>{
-        console.log(data)
-        insert(knexSqlite, "messages", data)
-        .then(response => {
-            select_by_id(knexSqlite, "messages", "*", response[0])
-            .then((response) => {
-                io.sockets.emit("newMessage",response)
-                console.log(response)
-            })
-        })
-        .catch(err => console.log(err))
-    })
+        const messages = new Messages(req.body);
+        try {
+            await messages.save();
+            io.sockets.emit("newMessage",data)
+        } catch (error) {
+            res.status(500).send(error);
+        }
     
+    })
     socket.on("receivedMessage", data =>{
         
     })
