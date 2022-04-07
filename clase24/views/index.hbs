@@ -1,5 +1,5 @@
 <div class="container">   
-    <h1>Test products</h1>
+    <h1>Lista de productos</h1>
     {{#if empty}}
         <p>No products to show, please add some...</p>
     {{else}}
@@ -7,15 +7,15 @@
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">thumbnail</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
                 </tr>
             </thead>
             <tbody>
                 {{#each products}}
                     <tr>
-                        <th scope="row">{{this.id}}</th>
+                        <th scope="row"></th>
                         <td>{{this.title}}</td>
                         <td>{{this.price}}</td>
                         <td><img src="{{this.thumbnail}}" alt="{{this.title}}" style="width: 60px;"></td>

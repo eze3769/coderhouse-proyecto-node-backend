@@ -2,15 +2,16 @@
   "type": "module",
   "dependencies": {
     "@vscode/sqlite3": "^5.0.7",
+    "connect-mongo": "^4.6.0",
+    "cookie-parser": "^1.4.6",
     "express": "^4.17.2",
     "express-handlebars": "^6.0.2",
+    "express-session": "^1.17.2",
     "knex": "^1.0.3",
+    "mongodb": "^4.4.1",
+    "mongoose": "^6.2.9",
     "mysql": "^2.18.1",
-    "normalizr": "^3.6.1",
     "socket.io": "^4.4.1",
     "sqlite3": "^5.0.2"
-  },
-  "devDependencies": {
-    "@faker-js/faker": "^6.0.0-beta.0"
   }
 }

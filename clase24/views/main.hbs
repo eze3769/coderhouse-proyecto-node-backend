@@ -1,0 +1,29 @@
+<div class="container">
+    {{#if user}}
+        <nav class="navbar navbar-light bg-light">
+            <div class="d-flex flex-row justify-content-between no-wrap align-items-center w-100">
+                <div class="container-fluid">
+                    <span class="navbar-brand mb-0 h1">Welcome {{user}}</span>
+                </div>
+                 <form action="/api/logout" method="post">
+                    <button class="btn btn-primary m-3 no-wrap" type="submit">Logout</button>
+                </form>
+            </div>
+        </nav>
+    {{/if}}
+
+    <h1>New product</h1>
+
+    {{>form url=url method=method buttonLabel=button }}
+
+    <div class="listContainer container d-flex p-2 m-3 bg-light rounded border border-2" id="productsContainer">
+        
+
+    </div>
+    <div class="mb-3 ">
+        <a href="/productos" class="btn btn-secondary">See products list</a>
+    </div>
+
+    {{>chat }}
+
+<script src="/js/main.js"></script>

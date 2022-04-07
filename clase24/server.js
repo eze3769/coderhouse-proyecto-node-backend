@@ -3,11 +3,18 @@ import {engine} from 'express-handlebars'
 import { createServer } from "http";
 import { Server } from "socket.io";
 import mongoose from "mongoose";
-import { check_products_table, insert, select, select_by_id } from './db/dbActions.js';
-import { knexSql, knexSqlite } from './db/dbConfig.js';
 import Products from './models/Products.js';
 import Messages from './models/Messages.js';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
+
+//mongo
 const uri = "mongodb+srv://ezequielcoder:admin123@coderdb.mw5hj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const advancedOptions = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}
 
 const app = express()
 const httpServer = createServer(app);
@@ -17,6 +24,18 @@ const PORT = 8080
 
 const {Router} = express
 const productsResources = Router()
+
+app.use(cookieParser());
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: uri,
+        mongoOptions: advancedOptions
+    }),
+    cookie: {maxAge: 600000},
+    secret: "shhhh",
+    resave: false,
+    saveUninitialized: false,
+}))
 
 
 const server = httpServer.listen(PORT,()=>{
@@ -45,16 +64,40 @@ engine({
 app.set("view engine", "hbs")
 app.set("views", "./views")
 
-app.use(express.static("public"))
+app.use(express.json())
+productsResources.use(express.json())
+app.use(express.urlencoded({extended : true}))
+productsResources.use(express.urlencoded({extended : true}))
 
-app.get('/',(req,res)=>{
+app.use('/api/products',productsResources)
+app.use(express.static('./public'))
+
+const auth = (req, res, next) => {
+    if (req.session?.user) {
+        return next()
+    }
+    // res.status(401).send("Authentication error!");
+    return res.redirect("/login");
+}
+
+app.get('/login',(req,res)=>{
+    res.render("login")
+})
+
+app.get('/logout', (req, res) => {
+    const data = req.query?.user
+    res.render("goodbye", { user: data })
+})
+
+app.get('/', auth, (req,res)=>{
     res.render("main",{
         url: "/api/products",
         method: "post",
-        button: "Create product"
+        button: "Create product",
+        user: req.session?.user
     })
 })
-app.get('/productos',async(req,res)=>{
+app.get('/productos', auth, async(req,res)=>{
     let empty
     const response = await Products.find({});
 
@@ -71,7 +114,7 @@ app.get('/productos',async(req,res)=>{
     
 })
 
-productsResources.post('/',async(req,res)=>{
+productsResources.post('/',async(req, res)=>{
     const product = new Products(req.body);
     try {
         await product.save();
@@ -81,13 +124,25 @@ productsResources.post('/',async(req,res)=>{
     }
 })
 
-app.use(express.json())
-productsResources.use(express.json())
-app.use(express.urlencoded({extended : true}))
-productsResources.use(express.urlencoded({extended : true}))
+app.post('/api/login', (req, res) => {
+    const response = req.body;
+    if (!response.name) {
+        return res.send("Login failed");
+    }
+    req.session.user = response.name;
+    res.redirect("/");
+})
 
-app.use('/api/products',productsResources)
-app.use(express.static('./public'))
+app.post('/api/logout', (req, res) => {
+    const user = req.session.user;
+
+    req.session.destroy(err =>{
+        if(err) {
+            return res.json({ status: "Logout error", body: err })
+        }
+        res.redirect("/logout/?user=" + user);
+    })
+})
 
 //Websockets
 
@@ -107,7 +162,7 @@ io.on("connection", async(socket)=>{
         res.status(500).send(error);
     }
   
-    socket.on("sendMessage", async (data) =>{
+    socket.on("sendMessage", async(data) =>{
         const messages = new Messages(req.body);
         try {
             await messages.save();

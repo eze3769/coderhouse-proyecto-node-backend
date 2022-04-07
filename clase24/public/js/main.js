@@ -3,16 +3,6 @@ const container = document.getElementById("productsContainer")
 const chatForm = document.getElementById("chatForm")
 const chatMessages = document.getElementById("chatMessages")
 
-const author = new normalizr.schema.Entity('author', {}, {idAttribute: 'email'});
-    const text = new normalizr.schema.Entity('text', { author: author },{ idAttribute: 'id' });
-    const messagesCenter= new normalizr.schema.Entity('messagesCenter', 
-        {
-            authors: [author],
-            messages: [text]
-        }, 
-        { idAttribute: 'id' }
-    );
-
 const miniCard = (data) =>{
     return(
         `
@@ -28,9 +18,12 @@ const chatLine= (data) =>{
     return(
         `
             <p>
-                <b>${data.author.email} </b>
+                <b>${data.email} </b>
+                <span class="text-brown">
+                    [${data.created_at}]:
+                </span>
                 <i class="text-success">
-                    ${data.text}
+                    ${data.message}
                 </i>
             </p>
         `
@@ -52,10 +45,10 @@ socket.on("addedProduct",data=>{
 })
 
 socket.on("chat",data =>{
-    if (data.length > 0){
-        const denormalized = [normalizr.denormalize(data.result, messagesCenter, data.entities)]
+    if (data !== []){
+        console.log(data)
         let aux = ""
-        denormalized.forEach(el=>{
+        data.forEach(el=>{
             aux += chatLine(el)
         })
         chatMessages.innerHTML = aux
@@ -63,9 +56,7 @@ socket.on("chat",data =>{
 })
 
 socket.on("newMessage",res =>{
-    console.log(res)
-    const data = normalizr.denormalize(res.result, messagesCenter, res.entities)
-    console.log(data)
+    const data = res[0]
     chatMessages.innerHTML += chatLine(data)
 })
 
@@ -73,17 +64,11 @@ const messageDeliver= (e) =>{
     e.preventDefault()
 
     const message = {
-        id: 'messages',
-        author:{
-            email: chatForm.email.value,
-            name: chatForm.name.value,
-            lastName: chatForm.lastName.value,
-            age: chatForm.age.value,
-            nickname: chatForm.nickname.value,
-        },
-        text: chatForm.message.value,
+        email: chatForm.email.value,
+        message: chatForm.message.value
     }
-    socket.emit("sendMessage", normalizr.normalize(message,messagesCenter))
+
+    socket.emit("sendMessage", message)
 }
 
 chatForm.addEventListener("submit",messageDeliver)

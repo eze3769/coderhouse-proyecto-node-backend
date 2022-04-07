@@ -9,7 +9,16 @@ import { knexSql, knexSqlite } from "./db/dbConfig.js";
 //         .then(()=>console.log("table created"))
 //         .catch((err)=>{console.error(err); throw err})
         
+knexSqlite.schema.createTable('messages', table => {
+    table.increments("id")
+    table.string("email")
+    table.timestamp('created_at').defaultTo(knexSqlite.fn.now())
+    table.float("message")
+})
+.then(()=>console.log("table created"))
+.catch((err)=>{console.error(err); throw err})
+.finally(()=> knexSqlite.destroy())
 
-// knexSqlite.schema.dropTable('messages') 
+// knexSqlite.schema.dropTable('products') 
 
 // knexSql.schema.dropTable('messages') 
