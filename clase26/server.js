@@ -8,10 +8,12 @@ import Messages from './models/Messages.js';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
-import { Strategy } from 'passport-local';
+import { Strategy as LocalStrategy} from 'passport-local';
 import passport from 'passport';
+import bCrypt from 'bcrypt';
 import { compareSync } from 'bcrypt';
-import * as routes from './routes';
+import * as routes from './routes.js';
+import Users from './models/Users.js';
 
 //mongo
 const uri = "mongodb+srv://ezequielcoder:admin123@coderdb.mw5hj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
@@ -46,8 +48,8 @@ app.use(session({
     saveUninitialized: false,
 }))
 
-   app.use(passport.initialize());
-   app.use(passport.session());
+    app.use(passport.initialize());
+    app.use(passport.session());
    
 
 const server = httpServer.listen(PORT,()=>{
@@ -88,15 +90,30 @@ const isValidPassword = (user, password) => {
     return compareSync(password, user.password);
 }
 
+passport.serializeUser(function(user, done){
+    done(null, user.id);
+  });
+   
+passport.deserializeUser(function(id, done){
+  Users.findById(id, function(err, user){
+    done(err, user);
+  });
+});
+
 const checkAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
-        next()
+        return next()
     }
+    console.log("need authenticate first");
     res.redirect('login');
 }
 
-passport.use('login', new Strategy((email, password, done) => {
-    User.findOne({ email }, (err, user) => {
+passport.use('login', new LocalStrategy({
+    usernameField : 'email',
+    passwordField : 'password',
+},(email, password, done) => {
+    console.log("entre")
+    Users.findOne({ email }, (err, user) => {
         if (err) {
             return done(err);
         }
@@ -116,11 +133,14 @@ passport.use('login', new Strategy((email, password, done) => {
 })
 )
 
-passport.use('signup', new Strategy({
+passport.use('register', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
     passReqToCallback: true
    },
     (req, email, password, done) => {
-      User.findOne({ 'email': email }, function (err, user) {
+        console.log("registro");
+        Users.findOne({ 'email': email }, function (err, user) {
    
         if (err) {
           console.log('Error in SignUp: ' + err);
@@ -137,13 +157,13 @@ passport.use('signup', new Strategy({
           email: req.body.email,
         }
 
-        User.create(newUser, (err, userWithId) => {
+        Users.create(newUser, (err, userWithId) => {
        if (err) {
          console.log('Error in Saving user: ' + err);
          return done(err);
        }
        console.log(user)
-       console.log('User Registration succesful');
+       console.log('User Registration successful');
        return done(null, userWithId);
      });
    });
@@ -157,16 +177,6 @@ function createHash(password) {
             null);
 }
 
-   
-
-const auth = (req, res, next) => {
-    if (req.session?.user) {
-        return next()
-    }
-    // res.status(401).send("Authentication error!");
-    return res.redirect("/login");
-}
-
 app.get('/login',(req,res)=>{
     res.render("login")
 })
@@ -176,26 +186,25 @@ app.post('/login', passport.authenticate('login', {failureRedirect: '/faillogin'
 
 app.post('/register', passport.authenticate('register', {failureRedirect: '/failregister'}), routes.postRegister)
 
-app.get('/logout', routes.getLogout);
-
 app.get('/register',(req,res)=>{
-    res.render("register")
+    res.render("signup")
 })
 
 app.get('/logout', (req, res) => {
-    const data = req.query?.user
+    const data = req.user.email
     res.render("goodbye", { user: data })
 })
 
-app.get('/', auth, (req,res)=>{
+app.get('/', checkAuthenticated, (req,res)=>{
     res.render("main",{
         url: "/api/products",
         method: "post",
         button: "Create product",
-        user: req.session?.user
+        user: req.user?.email
     })
 })
-app.get('/productos', auth, async(req,res)=>{
+
+app.get('/products', checkAuthenticated, async(req,res)=>{
     let empty
     const response = await Products.find({});
 
@@ -222,25 +231,25 @@ productsResources.post('/',async(req, res)=>{
     }
 })
 
-app.post('/api/login', (req, res) => {
-    const response = req.body;
-    if (!response.name) {
-        return res.send("Login failed");
-    }
-    req.session.user = response.name;
-    res.redirect("/");
-})
+// app.post('/api/login', (req, res) => {
+//     const response = req.body;
+//     if (!response.name) {
+//         return res.send("Login failed");
+//     }
+//     req.session.user = response.name;
+//     res.redirect("/");
+// })
 
-app.post('/api/logout', (req, res) => {
-    const user = req.session.user;
+// app.post('/api/logout', (req, res) => {
+//     const user = req.session.user;
 
-    req.session.destroy(err =>{
-        if(err) {
-            return res.json({ status: "Logout error", body: err })
-        }
-        res.redirect("/logout/?user=" + user);
-    })
-})
+//     req.session.destroy(err =>{
+//         if(err) {
+//             return res.json({ status: "Logout error", body: err })
+//         }
+//         res.redirect("/logout/?user=" + user);
+//     })
+// })
 
 //Websockets
 

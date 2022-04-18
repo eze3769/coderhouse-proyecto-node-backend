@@ -1,30 +1,15 @@
-const getRoot = (req, res) => {
-    res.send('Welcome');
-}
-
-const getLogin = (req, res) => {
-    if (req.authenticated()) {
-        let user = req.user;
-        console.log('user logged');
-        
-        res.render('profileUser', {user});
-    } else {
-        console.log('user not logged');
-        res.render('/login');
-    }
-}
-
-const getSignup = (req, res) => {
-    res.send('Welcome');
-}
 
 const postLogin = (req, res) => {
+    console.log("holalogin")
     const user = req.user;
-    res.render('/')
+    res.redirect('/')
 }
 
 const postRegister = (req, res) => {
     const user = req.user;
-
+    console.log("hola");
     res.render('/');
 }
+
+
+export { postLogin, postRegister };
