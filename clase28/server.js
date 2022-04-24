@@ -18,6 +18,7 @@ import { config } from 'dotenv';
 import { argv } from './config.js';
 import path from 'path';
 import {fileURLToPath} from 'url';
+import { fork } from 'child_process';
 
 config()
 //mongo
@@ -238,23 +239,14 @@ app.get('/info',(req, res) => {
 
 app.get('/random',(req, res) => {
     const quantity = req.query.quantity || 100000000;
-    const numbers = {};
-    const formattedArray = [];
 
-    for(let i = 0; i < quantity; i++){
-        const value = Math.ceil(Math.random()*1000)
-        if (numbers[value]){
-            numbers[value] = numbers[value]++
-        } else {
-            numbers[value] = 1
-        }
-        
-    }
-    Object.keys(numbers).map(el => formattedArray.push(`${el} --> ${numbers[el]} `))
-    res.render('random', {
-        numbers: formattedArray
+    const forked = fork('subprocess/random.js', [quantity]);
+
+    forked.on('message', message => {
+
+        res.render('random', message)
     })
-    console.log(formattedArray)
+
 })
 
 productsResources.post('/',async(req, res)=>{
