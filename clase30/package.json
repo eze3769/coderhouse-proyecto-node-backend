@@ -1,0 +1,25 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@vscode/sqlite3": "^5.0.7",
+    "bcrypt": "^5.0.1",
+    "cluster": "^0.7.7",
+    "connect-mongo": "^4.6.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "express-handlebars": "^6.0.2",
+    "express-session": "^1.17.2",
+    "knex": "^1.0.3",
+    "mongodb": "^4.4.1",
+    "mongoose": "^6.2.9",
+    "mysql": "^2.18.1",
+    "os": "^0.1.2",
+    "passport": "^0.5.2",
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7",
+    "socket.io": "^4.4.1",
+    "sqlite3": "^5.0.2",
+    "yargs": "^17.4.1"
+  }
+}
