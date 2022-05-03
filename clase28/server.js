@@ -21,12 +21,6 @@ import {fileURLToPath} from 'url';
 import { fork } from 'child_process';
 
 config()
-//mongo
-const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_URL}/myFirstDatabase?retryWrites=true&w=majority`;
-const advancedOptions = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}
 
 const app = express()
 const httpServer = createServer(app);
