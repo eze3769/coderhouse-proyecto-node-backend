@@ -11,6 +11,7 @@ import * as routes from './authRoutes.js';
 import Users from './models/Users.js';
 import mongoose from "mongoose";
 import { config } from 'dotenv';
+import os from 'os';
 
 config()
 
@@ -216,7 +217,8 @@ app.get('/info',(req, res) => {
         folder: path.dirname(fileURLToPath(import.meta.url)),
         process: process,
         memory: process.memoryUsage().rss,
-        path: process.cwd() 
+        path: process.cwd(),
+        processors: os.cpus().length,
     })
 })
 

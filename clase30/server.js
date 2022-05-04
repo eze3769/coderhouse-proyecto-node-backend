@@ -4,11 +4,8 @@ import Products from './models/Products.js';
 import Messages from './models/Messages.js';
 import { config } from 'dotenv';
 import { argv } from './config.js';
-import path from 'path';
-import {fileURLToPath} from 'url';
-import { fork } from 'child_process';
 import cluster from 'cluster';
-import os from 'os'
+import os from 'os';
 import { app } from './routes.js';
 
 config()
@@ -19,15 +16,40 @@ const io = new Server(httpServer)
 
 const numCPUs = os.cpus().length;
 
-const PORT = parseInt(argv.port) || 8080
+const PORT = parseInt(process.argv[2]) || 8080;
+const MODE = process.argv[3]?.toUpperCase() || "FORK";
 
-const server = httpServer.listen(PORT,()=>{
-    console.log(`Servidor con webSockets escuchando en el puerto ${server.address().port}`)
-})
+if (MODE === "FORK") {
+    console.log("Fork MODE")
+    
+    const server = httpServer.listen(PORT,()=>{
+        console.log(`Servidor PID-${process.pid} escuchando en el puerto ${server.address().port}`)
+    })
+    
+    server.on("error", error =>console.log(`Error en servidor: ${error}`))
+} else if (MODE === "CLUSTER") {
+    if (cluster.isPrimary) {
+        console.log("Cluster MODE")
+        console.log(`Primary ${process.pid} is running`)
 
-server.on("error", error =>console.log(`Error en servidor: ${error}`))
+        for (let i=0; i < numCPUs; i++) {
+            cluster.fork();
+        }
 
+        cluster.on("exit", (worker, code, signal) => {
+            console.log(`worker ${worker.process.pid} died`);
+        })
+    } else {
 
+        const server = httpServer.listen(PORT,()=>{
+            console.log(`Servidor PID-${process.pid} escuchando en el puerto ${server.address().port}`)
+        })
+
+        server.on("error", error =>console.log(`Error en servidor: ${error}`))
+
+        console.log(`worker ${process.pid} started`);
+    }
+};
 
 
 //Websockets

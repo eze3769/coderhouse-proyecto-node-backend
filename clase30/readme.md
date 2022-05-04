@@ -5,4 +5,4 @@
 
 ## Usage:
 - npm i to install dependencies.
-- run with node server.js
+- run with node server.js [port] [mode: cluster | fork]
