@@ -1,0 +1,15 @@
+<div class="container">
+    <h1>Information:</h1>
+    <p>Arguments: 
+        {{#each arguments}}
+        <span>{{this}} </span>   
+        {{/each}}
+    </p>
+    <p>OS: {{ process.platform }}</p>
+    <p>Node version: {{ process.version }}</p>
+    <p>Reserved memory: {{ memory }}</p>
+    <p>Execution path: {{ path}}</p>
+    <p>Process ID: {{ process.pid }}</p>
+    <p>Proyect folder: {{ folder }}</p>
+    <p>Processors: {{ processors }}</p>
+</div>
